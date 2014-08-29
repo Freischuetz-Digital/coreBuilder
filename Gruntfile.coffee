@@ -77,4 +77,5 @@ module.exports = (grunt) ->
   # Task(s).
   grunt.registerTask 'default', ['coffee', 'uglify', 'less']
   grunt.registerTask 'run', ['connect', 'watch']
+  grunt.registerTask 'serve', ['connect']
   grunt.registerTask 'build', ['install-dependencies', 'bower', 'concat', 'copy:fonts', 'copy:ace']
