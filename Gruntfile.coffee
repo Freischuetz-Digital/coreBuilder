@@ -34,6 +34,7 @@ module.exports = (grunt) ->
         options:
           port: 8000
           hostname: "localhost"
+          open: true
 
     watch:
       scripts:
@@ -77,5 +78,4 @@ module.exports = (grunt) ->
   # Task(s).
   grunt.registerTask 'default', ['coffee', 'uglify', 'less']
   grunt.registerTask 'run', ['connect', 'watch']
-  grunt.registerTask 'serve', ['connect:server:keepalive']
   grunt.registerTask 'build', ['install-dependencies', 'bower', 'concat', 'copy:fonts', 'copy:ace']
