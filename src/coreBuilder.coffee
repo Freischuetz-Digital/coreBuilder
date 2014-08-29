@@ -88,6 +88,7 @@ root.coreBuilder = {}
       onChange: (opt, adding) ->
         source = $(opt).val()
         escaped_src = source.replace(/[\?=\.]/g, '_')
+        
         if adding
           url = data_url + '/' + source
           source = coreBuilder.Data.Sources.add 
@@ -96,12 +97,35 @@ root.coreBuilder = {}
           $.get(url, (data) ->
             parser = new DOMParser() 
             xmlDoc = parser.parseFromString data,"text/xml"
-            source.set 
-              text : data
-              xmldata : xmlDoc
-            # Get title, too and other data-related stuff
-            # so that the model can be mapped to a template in the view.
-          , 'text')
+            
+            if $(opt).val().indexOf('?id=') != -1
+                internal_id = $(opt).val().substr($(opt).val().indexOf('?id=') + '?id='.length)
+                console.log internal_id
+
+                testTransform = document.implementation.createDocument("", "test", null)
+                testTransform.addEventListener("load", () ->
+                    processor = new XSLTProcessor()
+                    processor.importStylesheet(testTransform)
+                    processor.setParameter(null, "sceneID", internal_id)
+                    resultDoc = processor.transformToDocument(xmlDoc)
+                    
+                    serializer = new XMLSerializer()
+                    sXML = serializer.serializeToString(resultDoc)
+                    
+                    source.set 
+                        text : sXML
+                        xmldata : resultDoc
+                        # Get title, too and other data-related stuff
+                        # so that the model can be mapped to a template in the view.
+    
+                , false)
+                testTransform.load("scripts/sceneFromSource.xsl")
+            else
+                console.log "no internal_id"
+                source.set 
+                    text : data
+                    xmldata : xmlDoc
+          , 'text')            
         else
           s = coreBuilder.Data.Sources.get escaped_src
           coreBuilder.Data.Sources.remove escaped_src

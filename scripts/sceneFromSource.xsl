@@ -37,7 +37,7 @@
         </xd:desc>
     </xd:doc>
     <xsl:template match="/">
-        <xsl:copy-of select="//tei:div[@xml:id = $sceneID]"/>
+        <xsl:copy-of select=".//tei:div[@xml:id = $sceneID]"/>
     </xsl:template>
     
 </xsl:stylesheet>
