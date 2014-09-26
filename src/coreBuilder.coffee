@@ -464,13 +464,16 @@ root.coreBuilder = {}
         targets[source] = []
         for sg in r.selectionGroup.models
           targets[source].push sg.get("xmlid")
-        r.set "group", undefined
 
       entry = coreBuilder.Data.Core.add
         "entry" : @toDOM()
         "formatted" : @toXMLString(true)
         "output" : @toXMLString(false)
         "targets" : targets
+
+      # Now reset groups
+      for r in @collection.models 
+        r.set "group", undefined
 
       entry.sources = @collection
       entry.trigger 'sync'
@@ -561,7 +564,9 @@ root.coreBuilder = {}
       @
 
     remove: ->
+      console.log @collection
       @collection.each (c) ->
+        c.set("group", undefined)
         c.selectionGroup.each (s) ->
           c.selectionGroup.remove s
       @$el.empty()
